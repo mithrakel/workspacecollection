@@ -1,0 +1,266 @@
+{
+	"info": {
+		"_postman_id": "7009425e-a281-444d-a6c4-4ac2e5d28467",
+		"name": "Workspace",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c551b0d8-513d-4a43-aaf6-72ff9ccb9238",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody)\r",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.octoperf.com/public/users/login?username=dragondota@hotmail.com&password=stingmimkorn",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"public",
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "dragondota@hotmail.com"
+						},
+						{
+							"key": "password",
+							"value": "stingmimkorn"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WorkspaceMember",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b798f57-9b12-4141-90a7-2bc79cc24cba",
+						"exec": [
+							"pm.test(\"Verify status Code\", function(){\r",
+							"    pm.response.to.have.status(200)\r",
+							"}\r",
+							")\r",
+							"\r",
+							"// Verify respondse code using expect function\r",
+							"\r",
+							"pm.test(\"Verify Code\", function(){\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"})\r",
+							"\r",
+							"// Verify Key\r",
+							"\r",
+							"pm.test(\"Verify Key components\", ()=>{\r",
+							"    var data = JSON.parse(responseBody);\r",
+							"    data.forEach(function(results){\r",
+							"            pm.expect(results).to.have.all.keys('created',\r",
+							"                'description','id','lastModified','name','userId')\r",
+							"            })\r",
+							"        }\r",
+							"    )\r",
+							"\r",
+							"    pm.test(\"Verify name response\", ()=>{\r",
+							"        var data = pm.response.json();\r",
+							"        console.log(\"========>\"+data[0].name)\r",
+							"        pm.expect(data[0].name).to.equal('MungkornWorkspace')\r",
+							"    })\r",
+							"\r",
+							"    //TODO verify id,name,UserId\r",
+							"    \r",
+							"    pm.test(\"Verify id, name, userId\",()=>{\r",
+							"    var data = pm.response.json();\r",
+							"    pm.expect(data[0].id).to.equal('9wxygnQBJAj-hbsazeoq')\r",
+							"    pm.expect(data[0].name).to.equal('MungkornWorkspace')\r",
+							"    pm.expect(data[0].userId).to.equal('KyxygnQB_LDDJNLzzO_v')\r",
+							"     }\r",
+							"     )\r",
+							"\r",
+							"     //Verify Content Type headers\r",
+							"\r",
+							"     pm.test(\"Verify Content-type is present\",()=>{\r",
+							"         pm.response.to.have.header(\"Content-Type\")\r",
+							"     })\r",
+							"\r",
+							"       pm.test(\"Verify Content-type is application Json\",()=>{\r",
+							"           pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');\r",
+							"     })\r",
+							"\r",
+							"     //Assert Environment\r",
+							"     pm.test(\"Verify Environment\",()=>{\r",
+							"         pm.expect(pm.environment.name).to.equal(\"QAEnvironment\")\r",
+							"     })\r",
+							"\r",
+							"     \r",
+							"         const schema = {\r",
+							"  \"type\": \"array\",\r",
+							"  \"items\": [\r",
+							"    {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"created\": {\r",
+							"          \"type\": \"integer\"\r",
+							"        },\r",
+							"        \"description\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"id\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"lastModified\": {\r",
+							"          \"type\": \"integer\"\r",
+							"        },\r",
+							"        \"name\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"userId\": {\r",
+							"          \"type\": \"string\"\r",
+							"        }\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"created\",\r",
+							"        \"description\",\r",
+							"        \"id\",\r",
+							"        \"lastModified\",\r",
+							"        \"name\",\r",
+							"        \"userId\"\r",
+							"      ]\r",
+							"    }\r",
+							"  ]\r",
+							"}\r",
+							"\r",
+							"pm.test('Verify Schema is valid',function(){\r",
+							"pm.response.to.have.jsonSchema(schema);\r",
+							"})\r",
+							"\r",
+							"var data = pm.response.json();\r",
+							"postman.setEnvironmentVariable(\"workspaceId\",data[0].id)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.octoperf.com/workspaces/member-of",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"workspaces",
+						"member-of"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "workspaceMembersByWorkspaceID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cccb3b1a-6a3d-4ced-a1f7-247ac8a70db2",
+						"exec": [
+							"var data = pm.response.json();\r",
+							"pm.setEnvironmentVariable(\"id\",data[0].id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.octoperf.com/workspaces/members/by-workspace/{{workspaceId}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"workspaces",
+						"members",
+						"by-workspace",
+						"{{workspaceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "workspaceMembersID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateNewUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUser",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
